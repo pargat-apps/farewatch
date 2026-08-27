@@ -1,5 +1,7 @@
 # FareWatch
 
+**Live demo: [farewatch-beryl.vercel.app](https://farewatch-beryl.vercel.app/)** — open it on a phone, or narrow your browser to ~390px.
+
 Flight metasearch and price alerts. Search a route, compare its price across
 airlines and travel sites, set the maximum you're willing to pay, and get alerted
 when a matching fare appears — then pick which provider to book with.
@@ -78,9 +80,17 @@ One phase from the roadmap = one branch = one PR against `main`. CI runs lint,
 tests and a type-checking build on every PR. Mobile first — nothing gets a
 desktop layout before Phase 11.
 
+## Deployment
+
+Hosted free on [Vercel](https://vercel.com), building `farewatchfrontend/` as a
+static Vite SPA. `farewatchfrontend/vercel.json` rewrites every path to
+`index.html` so client-side routes (e.g. `/dashboard`, `/styleguide`) work on a
+direct load or refresh, not just via in-app navigation.
+
 ## Status
 
-Phase 0 (foundation) in review. Phase 1 (toolchain) next.
+Phase 0 (foundation) in review. Phase 1 (toolchain) next. Live demo deployed
+from `main`.
 
 ## License
 
