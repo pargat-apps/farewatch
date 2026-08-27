@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
-import { SidebarNav } from '../../components/SidebarNav';
+import { TopNav } from '../../components/TopNav';
 import { Button } from '../../components/ui/Button';
 import { TargetIcon, TrendDownIcon, WarningIcon, CheckIcon } from '../../components/icons';
 import type { NotificationItem } from '../../data/mock';
@@ -27,46 +27,65 @@ export default function NotificationsPage() {
 
   if (notifications.length === 0) {
     return (
-      <div className="fw-shell-with-sidebar">
-        <SidebarNav active="Notifications" />
-        <Screen wide>
+      <Screen wide>
+        <div className="fw-mobile-only">
           <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
             <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Notifications</span>
           </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--green-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--green-600)' }}>
-              <CheckIcon size={26} />
-            </div>
-            <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>You're all caught up</div>
-            <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
-              Your price alerts and flight updates will appear here.
-            </div>
+        </div>
+        <div className="fw-desktop-only">
+          <TopNav variant="app" />
+        </div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--green-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--green-600)' }}>
+            <CheckIcon size={26} />
           </div>
-          <TabBar active="Notifications" />
-        </Screen>
-      </div>
+          <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>You're all caught up</div>
+          <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
+            Your price alerts and flight updates will appear here.
+          </div>
+        </div>
+        <TabBar active="Notifications" />
+      </Screen>
     );
   }
 
   const groups: Array<'Today' | 'Earlier'> = ['Today', 'Earlier'];
 
   return (
-    <div className="fw-shell-with-sidebar">
-      <SidebarNav active="Notifications" />
-      <Screen wide>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
-        <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Notifications</span>
-        <div style={{ display: 'flex', gap: 14 }}>
-          <span onClick={markAllNotificationsRead} style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--action)', cursor: 'pointer' }}>
-            Mark all read
-          </span>
-          <span onClick={clearAllNotifications} style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--text-faint)', cursor: 'pointer' }}>
-            Clear all
-          </span>
+    <Screen wide>
+      <div className="fw-mobile-only">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
+          <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Notifications</span>
+          <div style={{ display: 'flex', gap: 14 }}>
+            <span onClick={markAllNotificationsRead} style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--action)', cursor: 'pointer' }}>
+              Mark all read
+            </span>
+            <span onClick={clearAllNotifications} style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--text-faint)', cursor: 'pointer' }}>
+              Clear all
+            </span>
+          </div>
         </div>
       </div>
+      <div className="fw-desktop-only">
+        <TopNav variant="app" />
+      </div>
       <div className="fw-scroll">
-        <div style={{ maxWidth: 720, margin: '0 auto', width: '100%' }}>
+        <div className="fw-desktop-only">
+          <div className="fw-container" style={{ padding: '32px 40px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ font: '800 28px/1.2 var(--font-sans)', letterSpacing: '-0.02em', color: 'var(--navy-900)' }}>Notifications</div>
+                <div style={{ font: '400 13.5px/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 9 }}>{unreadCount} unread</div>
+              </div>
+              <button className="fw-reset-btn" onClick={markAllNotificationsRead} style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--action)' }}>
+                Mark all as read
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="fw-container" style={{ marginTop: 8 }}>
+        <div className="fw-list-card">
         {groups.map((g) => {
           const items = notifications.filter((n) => n.group === g);
           if (items.length === 0) return null;
@@ -122,9 +141,9 @@ export default function NotificationsPage() {
           </Button>
         </div>
         </div>
+        </div>
       </div>
       <TabBar active="Notifications" badge={unreadCount} />
-      </Screen>
-    </div>
+    </Screen>
   );
 }

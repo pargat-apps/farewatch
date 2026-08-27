@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { BackButton } from '../../components/Screen';
 import { BottomSheet } from '../../components/BottomSheet';
+import { TopNav } from '../../components/TopNav';
 import { Button } from '../../components/ui/Button';
 import { Checkbox } from '../../components/ui/Checkbox';
 import { FlightCard } from '../../components/FlightCard';
@@ -12,6 +13,7 @@ import { useAppState } from '../../state/AppState';
 
 type SortKey = 'best' | 'cheapest' | 'fastest' | 'earliest' | 'latest';
 type StopsFilter = 'any' | 'direct' | '1' | '2+';
+type BookingOption = 'Any' | 'Airline direct' | 'Travel sites';
 
 const AIRLINE_OPTIONS = [
   { code: 'AC', label: 'Air Canada', from: 'from CA$898' },
@@ -39,6 +41,117 @@ function depMinutes(dep: string) {
   return h * 60 + parseInt(m[2], 10);
 }
 
+interface FilterState {
+  maxPrice: number;
+  setMaxPrice: (n: number) => void;
+  stopsFilter: StopsFilter;
+  setStopsFilter: (s: StopsFilter) => void;
+  selectedAirlines: Set<string>;
+  toggleAirline: (code: string) => void;
+  bookingOption: BookingOption;
+  setBookingOption: (o: BookingOption) => void;
+  carryOn: boolean;
+  setCarryOn: (b: boolean) => void;
+  checkedBag: boolean;
+  setCheckedBag: (b: boolean) => void;
+}
+
+function FilterControls({ f }: { f: FilterState }) {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+        <span style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Max price</span>
+        <span style={{ font: '700 14px/1 var(--font-sans)', color: 'var(--navy-900)' }}>Up to CA${f.maxPrice.toLocaleString()}</span>
+      </div>
+      <input
+        type="range"
+        min={600}
+        max={1500}
+        step={10}
+        value={f.maxPrice}
+        onChange={(e) => f.setMaxPrice(parseInt(e.target.value, 10))}
+        style={{ width: '100%', marginTop: 8, accentColor: 'var(--blue-600)' }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', font: '400 11px/1 var(--font-sans)', color: 'var(--text-faint)' }}>
+        <span>CA$600</span>
+        <span>CA$1,500</span>
+      </div>
+
+      <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Stops</div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {(['direct', '1', '2+'] as StopsFilter[]).map((s) => {
+          const label = s === 'direct' ? 'Direct' : s === '1' ? '1 stop' : '2+ stops';
+          const selected = f.stopsFilter === s;
+          return (
+            <span
+              key={s}
+              onClick={() => f.setStopsFilter(selected ? 'any' : s)}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                height: 40,
+                border: selected ? '1.5px solid var(--border-selected)' : '1px solid var(--border-strong)',
+                background: selected ? 'var(--surface-selected)' : 'transparent',
+                borderRadius: 'var(--r-md)',
+                font: `${selected ? 600 : 500} 13px/1 var(--font-sans)`,
+                color: selected ? 'var(--blue-700)' : 'var(--text-body)',
+                boxSizing: 'border-box',
+                cursor: 'pointer',
+              }}
+            >
+              {selected && <CheckIcon size={13} strokeWidth={2.5} />}
+              {label}
+            </span>
+          );
+        })}
+      </div>
+
+      <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Airlines</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {AIRLINE_OPTIONS.map((a) => (
+          <Checkbox key={a.code} label={a.label} count={a.from} checked={f.selectedAirlines.has(a.code)} onChange={() => f.toggleAirline(a.code)} />
+        ))}
+      </div>
+
+      <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Booking option</div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {(['Any', 'Airline direct', 'Travel sites'] as BookingOption[]).map((o) => {
+          const selected = f.bookingOption === o;
+          return (
+            <span
+              key={o}
+              onClick={() => f.setBookingOption(o)}
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '9px 0',
+                border: selected ? '1.5px solid var(--border-selected)' : '1px solid var(--border-strong)',
+                background: selected ? 'var(--surface-selected)' : 'transparent',
+                borderRadius: 'var(--r-md)',
+                font: `${selected ? 600 : 500} 12.5px/1 var(--font-sans)`,
+                color: selected ? 'var(--blue-700)' : 'var(--text-body)',
+                boxSizing: 'border-box',
+                cursor: 'pointer',
+              }}
+            >
+              {o}
+            </span>
+          );
+        })}
+      </div>
+
+      <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Baggage</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Checkbox label="Carry-on included" checked={f.carryOn} onChange={f.setCarryOn} />
+        <Checkbox label="Checked bag included" checked={f.checkedBag} onChange={f.setCheckedBag} />
+      </div>
+    </>
+  );
+}
+
 export default function ResultsPage() {
   const navigate = useNavigate();
   const { searchForm } = useAppState();
@@ -46,7 +159,7 @@ export default function ResultsPage() {
   const [sort, setSort] = useState<SortKey>('best');
   const [maxPrice, setMaxPrice] = useState(1000);
   const [stopsFilter, setStopsFilter] = useState<StopsFilter>('1');
-  const [bookingOption, setBookingOption] = useState<'Any' | 'Airline direct' | 'Travel sites'>('Any');
+  const [bookingOption, setBookingOption] = useState<BookingOption>('Any');
   const [selectedAirlines, setSelectedAirlines] = useState<Set<string>>(new Set(['AC', 'EK', 'QR']));
   const [carryOn, setCarryOn] = useState(true);
   const [checkedBag, setCheckedBag] = useState(false);
@@ -58,6 +171,21 @@ export default function ResultsPage() {
       else next.add(code);
       return next;
     });
+  };
+
+  const filterState: FilterState = {
+    maxPrice,
+    setMaxPrice,
+    stopsFilter,
+    setStopsFilter,
+    selectedAirlines,
+    toggleAirline,
+    bookingOption,
+    setBookingOption,
+    carryOn,
+    setCarryOn,
+    checkedBag,
+    setCheckedBag,
   };
 
   const filtered = useMemo(() => {
@@ -84,80 +212,168 @@ export default function ResultsPage() {
   if (stopsFilter === '1') activeChips.push('1 stop');
   if (maxPrice < 1500) activeChips.push(`Under CA$${maxPrice.toLocaleString()}`);
 
+  const cardList = (
+    <div className="fw-card-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {sorted.map((f) => (
+        <div key={f.id} className="fw-hoverable" onClick={() => navigate(`/flight/${f.id}`)} style={{ cursor: 'pointer' }}>
+          <FlightCard
+            f={f}
+            onCompare={(e) => {
+              e.stopPropagation();
+              navigate(`/flight/${f.id}/compare`);
+            }}
+            onTrack={(e) => {
+              e.stopPropagation();
+              navigate(`/track/${f.id}`);
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <Screen wide>
-      <div style={{ background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
-          <BackButton onClick={() => navigate('/home')} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ font: '700 15px/1 var(--font-mono)', color: 'var(--navy-900)' }}>
-              {searchForm.fromCode} → {searchForm.toCode}
+      <div className="fw-mobile-only">
+        <div style={{ background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
+            <BackButton onClick={() => navigate('/home')} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ font: '700 15px/1 var(--font-mono)', color: 'var(--navy-900)' }}>
+                {searchForm.fromCode} → {searchForm.toCode}
+              </div>
+              <div style={{ font: '400 12px/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 4 }}>
+                {searchForm.departDate} – {searchForm.returnDate} · {searchForm.travelers} travelers · {searchForm.cabin}
+              </div>
             </div>
-            <div style={{ font: '400 12px/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 4 }}>
-              {searchForm.departDate} – {searchForm.returnDate} · {searchForm.travelers} travelers · {searchForm.cabin}
-            </div>
+            <Button variant="secondary" size="sm" onClick={() => navigate('/home')}>
+              Modify
+            </Button>
           </div>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/home')}>
-            Modify
-          </Button>
-        </div>
-        <div style={{ display: 'flex', gap: 8, padding: '4px 12px 12px', overflowX: 'auto' }}>
-          <button
-            className="fw-reset-btn"
-            onClick={() => setSheet('sort')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '600 13px/1 var(--font-sans)', color: 'var(--text-heading)', flexShrink: 0 }}
-          >
-            <SortIcon size={14} />
-            Sort
-          </button>
-          <button
-            className="fw-reset-btn"
-            onClick={() => setSheet('filter')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '600 13px/1 var(--font-sans)', color: 'var(--text-heading)', flexShrink: 0 }}
-          >
-            <FilterIcon size={14} />
-            Filters
-          </button>
-          {activeChips.map((c) => (
-            <span
-              key={c}
-              style={{ display: 'inline-flex', alignItems: 'center', height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '500 13px/1 var(--font-sans)', color: 'var(--text-body)', flexShrink: 0 }}
+          <div style={{ display: 'flex', gap: 8, padding: '4px 12px 12px', overflowX: 'auto' }}>
+            <button
+              className="fw-reset-btn"
+              onClick={() => setSheet('sort')}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '600 13px/1 var(--font-sans)', color: 'var(--text-heading)', flexShrink: 0 }}
             >
-              {c}
-            </span>
-          ))}
+              <SortIcon size={14} />
+              Sort
+            </button>
+            <button
+              className="fw-reset-btn"
+              onClick={() => setSheet('filter')}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '600 13px/1 var(--font-sans)', color: 'var(--text-heading)', flexShrink: 0 }}
+            >
+              <FilterIcon size={14} />
+              Filters
+            </button>
+            {activeChips.map((c) => (
+              <span
+                key={c}
+                style={{ display: 'inline-flex', alignItems: 'center', height: 36, padding: '0 12px', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-pill)', background: '#fff', font: '500 13px/1 var(--font-sans)', color: 'var(--text-body)', flexShrink: 0 }}
+              >
+                {c}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="fw-scroll" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-          <span style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--navy-900)' }}>{sorted.length} itineraries found</span>
-          <span style={{ font: '400 11px/1 var(--font-sans)', color: 'var(--text-faint)' }}>Lowest price across supported providers</span>
-        </div>
-        <div className="fw-card-stagger fw-grid-2">
-          {sorted.map((f) => (
-            <div key={f.id} className="fw-hoverable" onClick={() => navigate(`/flight/${f.id}`)} style={{ cursor: 'pointer' }}>
-              <FlightCard
-                f={f}
-                onCompare={(e) => {
-                  e.stopPropagation();
-                  navigate(`/flight/${f.id}/compare`);
-                }}
-                onTrack={(e) => {
-                  e.stopPropagation();
-                  navigate(`/track/${f.id}`);
-                }}
-              />
+      <div className="fw-desktop-only">
+        <TopNav
+          variant="task"
+          context={{
+            route: (
+              <>
+                {searchForm.fromCode} → {searchForm.toCode}
+              </>
+            ),
+            dates: `${searchForm.departDate} – ${searchForm.returnDate}`,
+            travelers: `${searchForm.travelers} travelers`,
+            onEdit: () => navigate('/home'),
+          }}
+        />
+      </div>
+
+      <div className="fw-scroll">
+        <div className="fw-mobile-only">
+          <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+              <span style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--navy-900)' }}>{sorted.length} itineraries found</span>
+              <span style={{ font: '400 11px/1 var(--font-sans)', color: 'var(--text-faint)' }}>Lowest price across supported providers</span>
             </div>
-          ))}
+            {cardList}
+            <button
+              className="fw-reset-btn"
+              onClick={() => navigate('/compare-flights')}
+              style={{ textAlign: 'center', font: '600 13px/1 var(--font-sans)', color: 'var(--action)', padding: '8px 0 4px' }}
+            >
+              Compare a few flights side by side
+            </button>
+          </div>
         </div>
-        <button
-          className="fw-reset-btn"
-          onClick={() => navigate('/compare-flights')}
-          style={{ textAlign: 'center', font: '600 13px/1 var(--font-sans)', color: 'var(--action)', padding: '8px 0 4px' }}
-        >
-          Compare a few flights side by side
-        </button>
+
+        {/* ---- Desktop: left filter sidebar + results (per FareWatch Desktop UI D4) ---- */}
+        <div className="fw-desktop-only">
+          <div className="fw-container" style={{ padding: '26px 40px', display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+            <div style={{ width: 260, flexShrink: 0, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', boxShadow: 'var(--shadow-xs)', padding: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ font: '600 15px/1 var(--font-sans)', color: 'var(--navy-900)' }}>Filters</span>
+                <button
+                  className="fw-reset-btn"
+                  onClick={() => {
+                    setMaxPrice(1500);
+                    setStopsFilter('any');
+                    setSelectedAirlines(new Set());
+                  }}
+                  style={{ font: '600 12.5px/1 var(--font-sans)', color: 'var(--action)' }}
+                >
+                  Clear all
+                </button>
+              </div>
+              <div style={{ height: 1, background: 'var(--border-default)', margin: '16px 0' }} />
+              <FilterControls f={filterState} />
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ font: '800 20px/1.2 var(--font-sans)', letterSpacing: '-0.02em', color: 'var(--navy-900)' }}>
+                    {sorted.length} itineraries · from CA${sorted.length ? Math.min(...sorted.map((f) => priceNum(f.price))) : 0}
+                  </div>
+                  <div style={{ font: '400 13px/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 7 }}>Lowest price across supported providers</div>
+                </div>
+                <div style={{ display: 'flex', background: '#fff', border: '1px solid var(--border-strong)', borderRadius: 'var(--r-md)', padding: 3 }}>
+                  {(['best', 'cheapest', 'fastest'] as SortKey[]).map((k) => (
+                    <button
+                      key={k}
+                      className="fw-reset-btn"
+                      onClick={() => setSort(k)}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: 7,
+                        background: sort === k ? 'var(--navy-900)' : 'transparent',
+                        font: `${sort === k ? 600 : 500} 12.5px/1 var(--font-sans)`,
+                        color: sort === k ? '#fff' : 'var(--text-body)',
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {k === 'best' ? 'Best' : k === 'cheapest' ? 'Cheapest' : 'Fastest'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginTop: 18 }}>{cardList}</div>
+              <button
+                className="fw-reset-btn"
+                onClick={() => navigate('/compare-flights')}
+                style={{ textAlign: 'center', width: '100%', font: '600 13px/1 var(--font-sans)', color: 'var(--action)', padding: '16px 0 4px' }}
+              >
+                Compare a few flights side by side
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {sheet === 'sort' && (
@@ -245,101 +461,7 @@ export default function ResultsPage() {
             </div>
           }
         >
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <span style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Max price</span>
-            <span style={{ font: '700 14px/1 var(--font-sans)', color: 'var(--navy-900)' }}>Up to CA${maxPrice.toLocaleString()}</span>
-          </div>
-          <input
-            type="range"
-            min={600}
-            max={1500}
-            step={10}
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(parseInt(e.target.value, 10))}
-            style={{ width: '100%', marginTop: 8, accentColor: 'var(--blue-600)' }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', font: '400 11px/1 var(--font-sans)', color: 'var(--text-faint)' }}>
-            <span>CA$600</span>
-            <span>CA$1,500</span>
-          </div>
-
-          <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Stops</div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {(['direct', '1', '2+'] as StopsFilter[]).map((s) => {
-              const label = s === 'direct' ? 'Direct' : s === '1' ? '1 stop' : '2+ stops';
-              const selected = stopsFilter === s;
-              return (
-                <span
-                  key={s}
-                  onClick={() => setStopsFilter(selected ? 'any' : s)}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 6,
-                    height: 40,
-                    border: selected ? '1.5px solid var(--border-selected)' : '1px solid var(--border-strong)',
-                    background: selected ? 'var(--surface-selected)' : 'transparent',
-                    borderRadius: 'var(--r-md)',
-                    font: `${selected ? 600 : 500} 13px/1 var(--font-sans)`,
-                    color: selected ? 'var(--blue-700)' : 'var(--text-body)',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {selected && <CheckIcon size={13} strokeWidth={2.5} />}
-                  {label}
-                </span>
-              );
-            })}
-          </div>
-
-          <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Airlines</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {AIRLINE_OPTIONS.map((a) => (
-              <Checkbox
-                key={a.code}
-                label={a.label}
-                count={a.from}
-                checked={selectedAirlines.has(a.code)}
-                onChange={() => toggleAirline(a.code)}
-              />
-            ))}
-          </div>
-
-          <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Booking option</div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {(['Any', 'Airline direct', 'Travel sites'] as const).map((o) => {
-              const selected = bookingOption === o;
-              return (
-                <span
-                  key={o}
-                  onClick={() => setBookingOption(o)}
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    padding: '9px 0',
-                    border: selected ? '1.5px solid var(--border-selected)' : '1px solid var(--border-strong)',
-                    background: selected ? 'var(--surface-selected)' : 'transparent',
-                    borderRadius: 'var(--r-md)',
-                    font: `${selected ? 600 : 500} 12.5px/1 var(--font-sans)`,
-                    color: selected ? 'var(--blue-700)' : 'var(--text-body)',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {o}
-                </span>
-              );
-            })}
-          </div>
-
-          <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', margin: '20px 0 10px' }}>Baggage</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Checkbox label="Carry-on included" checked={carryOn} onChange={setCarryOn} />
-            <Checkbox label="Checked bag included" checked={checkedBag} onChange={setCheckedBag} />
-          </div>
+          <FilterControls f={filterState} />
         </BottomSheet>
       )}
     </Screen>

@@ -114,9 +114,10 @@ img {
    Responsive breakpoints
    390px  — design baseline (mobile, phone-frame look above 480px)
    768px  — tablet: content widens, sheets become centered dialogs
-   1024px — desktop: sidebar nav replaces the bottom tab bar, screens
-            that opt in via .fw-screen--wide drop the phone frame
-   1280px — wide desktop: sidebar and content gain a little more room
+   1024px — desktop: TopNav replaces the bottom tab bar; screens that
+            opt in via .fw-screen--wide drop the phone frame and render
+            their dedicated desktop layout (per FareWatch Desktop UI.dc.html)
+   1280px — wide desktop: a little more breathing room
    ------------------------------------------------------------------- */
 
 /* Screens that opt into using real desktop width instead of staying a
@@ -133,63 +134,107 @@ img {
   .fw-screen--wide {
     max-width: none;
     width: 100%;
-    flex: 1 1 auto;
-    min-width: 0;
     box-shadow: none;
     border-left: none;
     border-right: none;
     min-height: 100vh;
   }
-
-  .fw-shell-with-sidebar .fw-screen--wide {
-    min-height: 100vh;
-  }
 }
 
-@media (min-width: 1280px) {
-  .fw-screen--wide {
-    max-width: var(--container);
-    margin: 0 auto;
-  }
-}
-
-/* Sidebar shell — wraps SidebarNav + a wide Screen for the five tab-root
-   pages (dashboard, alerts, saved, notifications, profile). Below 1024px
-   it collapses to just the screen; the bottom TabBar takes over nav. */
-.fw-shell-with-sidebar {
-  display: flex;
+/* The desktop content container: 1160px design width, centered, with
+   fluid gutters so it doesn't go edge-to-edge between 1024 and 1440,
+   or feel cramped above it. No padding below 1024 — this class gets used
+   around content shared with the mobile layout, which already has its
+   own padding from the mobile screen chrome; adding more here would
+   double up and crush the 390px view. */
+.fw-container {
   width: 100%;
-  min-height: 100vh;
-  justify-content: center;
+  max-width: var(--container);
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.fw-sidebar {
+@media (min-width: 1024px) {
+  .fw-container {
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .fw-container {
+    padding: 0 48px;
+  }
+}
+
+/* Show one variant of a screen on mobile/tablet and a different one on
+   desktop. display:contents means the wrapper never participates in its
+   parent's layout — only its children do — so it's safe to use around
+   arbitrary markup (flex rows, grids, whatever the child needs). */
+.fw-mobile-only {
+  display: contents;
+}
+.fw-desktop-only {
   display: none;
 }
 
 @media (min-width: 1024px) {
-  .fw-shell-with-sidebar {
-    align-items: stretch;
+  .fw-mobile-only {
+    display: none;
   }
-
-  .fw-sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 248px;
-    flex-shrink: 0;
-    background: #fff;
-    border-right: 1px solid var(--border-default);
-    position: sticky;
-    top: 0;
-    height: 100vh;
+  .fw-desktop-only {
+    display: contents;
   }
 }
 
-/* The bottom tab bar is a mobile/tablet pattern; the sidebar replaces it
+/* The bottom tab bar is a mobile/tablet pattern; TopNav replaces it
    from 1024px up. */
 @media (min-width: 1024px) {
   .fw-tabbar {
     display: none;
+  }
+}
+
+.fw-topnav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fw-topnav {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0 40px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-default);
+    flex-shrink: 0;
+    gap: 32px;
+  }
+
+  .fw-topnav--marketing {
+    height: 72px;
+  }
+
+  .fw-topnav-link {
+    font: 500 14px/1 var(--font-sans);
+    color: var(--text-body);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+  .fw-topnav-link[aria-current="page"] {
+    color: var(--navy-900);
+    font-weight: 600;
+    position: relative;
+  }
+  .fw-topnav-link[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -23px;
+    height: 2px;
+    background: var(--action);
   }
 }
 
@@ -234,6 +279,18 @@ img {
 @media (min-width: 1024px) {
   .fw-screen-header {
     padding: 14px 24px;
+  }
+}
+
+/* A flat mobile list becomes one bordered, shadowed card at desktop
+   (notifications, price-history change log). */
+@media (min-width: 1024px) {
+  .fw-list-card {
+    background: #fff;
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
   }
 }
 

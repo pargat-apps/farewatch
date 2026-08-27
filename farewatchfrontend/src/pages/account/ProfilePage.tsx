@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
-import { SidebarNav } from '../../components/SidebarNav';
+import { TopNav } from '../../components/TopNav';
 import { Button } from '../../components/ui/Button';
 import { ChevronRightIcon, LogoutIcon } from '../../components/icons';
 import { currentUser } from '../../data/mock';
@@ -12,9 +12,10 @@ export default function ProfilePage() {
   const { unreadCount, signOut } = useAppState();
 
   return (
-    <div className="fw-shell-with-sidebar">
-      <SidebarNav active="Profile" badge={unreadCount} />
-      <Screen wide>
+    <Screen wide>
+      <div className="fw-desktop-only">
+        <TopNav variant="app" />
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 16px 20px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <div style={{ position: 'relative' }}>
           <img src={currentUser.avatar} alt={currentUser.name} style={{ width: 76, height: 76, borderRadius: '50%', objectFit: 'cover' }} />
@@ -59,8 +60,7 @@ export default function ProfilePage() {
         </div>
       </div>
       <TabBar active="Profile" badge={unreadCount} />
-      </Screen>
-    </div>
+    </Screen>
   );
 }
 

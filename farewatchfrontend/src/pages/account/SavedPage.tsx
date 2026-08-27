@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
-import { SidebarNav } from '../../components/SidebarNav';
+import { TopNav } from '../../components/TopNav';
 import { Button } from '../../components/ui/Button';
 import { HeartFilledIcon } from '../../components/icons';
 import { useAppState } from '../../state/AppState';
@@ -12,41 +12,57 @@ export default function SavedPage() {
 
   if (savedSearches.length === 0) {
     return (
-      <div className="fw-shell-with-sidebar">
-        <SidebarNav active="Saved" badge={unreadCount} />
-        <Screen wide>
+      <Screen wide>
+        <div className="fw-mobile-only">
           <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
             <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
           </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
-              <HeartFilledIcon size={26} color="var(--gray-400)" />
-            </div>
-            <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No saved searches</div>
-            <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
-              Save routes you want to check again later.
-            </div>
-            <div style={{ marginTop: 20 }}>
-              <Button variant="secondary" onClick={() => navigate('/home')}>
-                Search flights
-              </Button>
-            </div>
+        </div>
+        <div className="fw-desktop-only">
+          <TopNav variant="app" active="saved" />
+        </div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
+            <HeartFilledIcon size={26} color="var(--gray-400)" />
           </div>
-          <TabBar active="Saved" badge={unreadCount} />
-        </Screen>
-      </div>
+          <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No saved searches</div>
+          <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
+            Save routes you want to check again later.
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <Button variant="secondary" onClick={() => navigate('/home')}>
+              Search flights
+            </Button>
+          </div>
+        </div>
+        <TabBar active="Saved" badge={unreadCount} />
+      </Screen>
     );
   }
 
   return (
-    <div className="fw-shell-with-sidebar">
-      <SidebarNav active="Saved" badge={unreadCount} />
-      <Screen wide>
-      <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
-        <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
+    <Screen wide>
+      <div className="fw-mobile-only">
+        <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
+          <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
+        </div>
+      </div>
+      <div className="fw-desktop-only">
+        <TopNav variant="app" active="saved" />
       </div>
       <div className="fw-scroll" style={{ padding: '14px 16px' }}>
-        <div className="fw-grid-2">
+        <div className="fw-desktop-only">
+          <div className="fw-container" style={{ padding: '18px 0 0' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ font: '800 28px/1.2 var(--font-sans)', letterSpacing: '-0.02em', color: 'var(--navy-900)' }}>Saved flights</div>
+                <div style={{ font: '400 13.5px/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 9 }}>{savedSearches.length} itineraries</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="fw-container" style={{ marginTop: 8 }}>
+        <div className="fw-grid-3">
         {savedSearches.map((s) => (
           <div key={s.id} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', boxShadow: 'var(--shadow-sm)', padding: '14px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -91,9 +107,9 @@ export default function SavedPage() {
           </div>
         ))}
         </div>
+        </div>
       </div>
       <TabBar active="Saved" badge={unreadCount} />
-      </Screen>
-    </div>
+    </Screen>
   );
 }
