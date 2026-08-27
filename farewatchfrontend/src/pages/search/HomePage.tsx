@@ -20,7 +20,7 @@ export default function HomePage() {
   const { searchForm, setSearchForm, isSignedIn } = useAppState();
 
   return (
-    <Screen>
+    <Screen wide>
       <div className="fw-scroll">
         <div
           style={{
@@ -49,6 +49,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        <div style={{ maxWidth: 640, margin: '0 auto', width: '100%' }}>
         <div style={{ padding: '20px 16px 16px' }}>
           <div style={{ font: '800 30px/1.15 var(--font-sans)', letterSpacing: '-0.02em', color: 'var(--navy-900)' }}>
             One flight. Many prices.
@@ -236,6 +237,7 @@ export default function HomePage() {
             <polyline points="12 6 12 12 16 14" />
           </svg>
           <span style={{ font: '400 12px/1 var(--font-sans)' }}>Fares refresh every few minutes</span>
+        </div>
         </div>
       </div>
     </Screen>

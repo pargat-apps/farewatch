@@ -1,8 +1,22 @@
 import type { CSSProperties, ReactNode } from 'react';
 
-export function Screen({ children, background, style }: { children: ReactNode; background?: string; style?: CSSProperties }) {
+export function Screen({
+  children,
+  background,
+  style,
+  wide = false,
+}: {
+  children: ReactNode;
+  background?: string;
+  style?: CSSProperties;
+  /** Use real desktop width (tablet: 720px, desktop: fluid up to --container)
+   *  instead of staying a 480px phone frame. Reach for this on content-heavy
+   *  screens (search, results, compare, dashboards); leave it off for forms,
+   *  auth, confirmations and errors, which read better as a centered card. */
+  wide?: boolean;
+}) {
   return (
-    <div className="fw-screen" style={{ background: background ?? 'var(--surface-page)', ...style }}>
+    <div className={wide ? 'fw-screen fw-screen--wide' : 'fw-screen'} style={{ background: background ?? 'var(--surface-page)', ...style }}>
       {children}
     </div>
   );
@@ -23,6 +37,7 @@ export function ScreenHeader({
 }) {
   return (
     <div
+      className="fw-screen-header"
       style={{
         display: 'flex',
         alignItems: 'center',

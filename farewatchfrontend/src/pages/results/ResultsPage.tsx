@@ -85,7 +85,7 @@ export default function ResultsPage() {
   if (maxPrice < 1500) activeChips.push(`Under CA$${maxPrice.toLocaleString()}`);
 
   return (
-    <Screen>
+    <Screen wide>
       <div style={{ background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
           <BackButton onClick={() => navigate('/home')} />
@@ -134,9 +134,9 @@ export default function ResultsPage() {
           <span style={{ font: '600 13px/1 var(--font-sans)', color: 'var(--navy-900)' }}>{sorted.length} itineraries found</span>
           <span style={{ font: '400 11px/1 var(--font-sans)', color: 'var(--text-faint)' }}>Lowest price across supported providers</span>
         </div>
-        <div className="fw-card-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="fw-card-stagger fw-grid-2">
           {sorted.map((f) => (
-            <div key={f.id} onClick={() => navigate(`/flight/${f.id}`)} style={{ cursor: 'pointer' }}>
+            <div key={f.id} className="fw-hoverable" onClick={() => navigate(`/flight/${f.id}`)} style={{ cursor: 'pointer' }}>
               <FlightCard
                 f={f}
                 onCompare={(e) => {

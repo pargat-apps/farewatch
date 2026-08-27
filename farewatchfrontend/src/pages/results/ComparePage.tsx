@@ -26,7 +26,7 @@ export default function ComparePage() {
   const official = providersYYZDEL.find((p) => p.isOfficial)!;
 
   return (
-    <Screen>
+    <Screen wide>
       <div style={{ background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
           <BackButton onClick={() => navigate(-1)} />
@@ -46,7 +46,8 @@ export default function ComparePage() {
         </div>
       </div>
 
-      <div className="fw-scroll" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="fw-scroll" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 760 }}>
         <div style={{ display: 'flex', gap: 8 }}>
           <div style={{ flex: 1, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-md)', padding: '9px 10px' }}>
             <div style={{ font: '600 9px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--green-700)' }}>Cheapest</div>
@@ -115,6 +116,7 @@ export default function ComparePage() {
             No booking options example
           </span>
         </div>
+      </div>
       </div>
     </Screen>
   );

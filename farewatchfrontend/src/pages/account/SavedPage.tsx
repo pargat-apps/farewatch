@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
+import { SidebarNav } from '../../components/SidebarNav';
 import { Button } from '../../components/ui/Button';
 import { HeartFilledIcon } from '../../components/icons';
 import { useAppState } from '../../state/AppState';
@@ -11,35 +12,41 @@ export default function SavedPage() {
 
   if (savedSearches.length === 0) {
     return (
-      <Screen>
-        <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
-          <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
-        </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
-            <HeartFilledIcon size={26} color="var(--gray-400)" />
+      <div className="fw-shell-with-sidebar">
+        <SidebarNav active="Saved" badge={unreadCount} />
+        <Screen wide>
+          <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
+            <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
           </div>
-          <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No saved searches</div>
-          <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
-            Save routes you want to check again later.
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
+              <HeartFilledIcon size={26} color="var(--gray-400)" />
+            </div>
+            <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No saved searches</div>
+            <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
+              Save routes you want to check again later.
+            </div>
+            <div style={{ marginTop: 20 }}>
+              <Button variant="secondary" onClick={() => navigate('/home')}>
+                Search flights
+              </Button>
+            </div>
           </div>
-          <div style={{ marginTop: 20 }}>
-            <Button variant="secondary" onClick={() => navigate('/home')}>
-              Search flights
-            </Button>
-          </div>
-        </div>
-        <TabBar active="Saved" badge={unreadCount} />
-      </Screen>
+          <TabBar active="Saved" badge={unreadCount} />
+        </Screen>
+      </div>
     );
   }
 
   return (
-    <Screen>
+    <div className="fw-shell-with-sidebar">
+      <SidebarNav active="Saved" badge={unreadCount} />
+      <Screen wide>
       <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>Saved</span>
       </div>
-      <div className="fw-scroll" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="fw-scroll" style={{ padding: '14px 16px' }}>
+        <div className="fw-grid-2">
         {savedSearches.map((s) => (
           <div key={s.id} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', boxShadow: 'var(--shadow-sm)', padding: '14px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -83,8 +90,10 @@ export default function SavedPage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
       <TabBar active="Saved" badge={unreadCount} />
-    </Screen>
+      </Screen>
+    </div>
   );
 }

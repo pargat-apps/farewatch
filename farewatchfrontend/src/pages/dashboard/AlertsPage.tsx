@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
+import { SidebarNav } from '../../components/SidebarNav';
 import { Button } from '../../components/ui/Button';
 import { BellIcon, EditIcon, MoreIcon, PauseIcon, TrashIcon } from '../../components/icons';
 import type { AlertItem } from '../../data/mock';
@@ -49,29 +50,34 @@ export default function AlertsPage() {
 
   if (alerts.length === 0) {
     return (
-      <Screen>
-        <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
-          <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>My alerts</span>
-        </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
-            <BellIcon size={26} />
+      <div className="fw-shell-with-sidebar">
+        <SidebarNav active="Alerts" badge={unreadCount} />
+        <Screen wide>
+          <div style={{ padding: 16, background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
+            <span style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>My alerts</span>
           </div>
-          <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No price alerts yet</div>
-          <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
-            Search for a flight and set the maximum price you'd like to pay.
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gray-400)' }}>
+              <BellIcon size={26} />
+            </div>
+            <div style={{ font: '600 16px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 16 }}>No price alerts yet</div>
+            <div style={{ font: '400 14px/1.55 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6, maxWidth: 280 }}>
+              Search for a flight and set the maximum price you'd like to pay.
+            </div>
+            <div style={{ marginTop: 20 }}>
+              <Button onClick={() => navigate('/home')}>Search flights</Button>
+            </div>
           </div>
-          <div style={{ marginTop: 20 }}>
-            <Button onClick={() => navigate('/home')}>Search flights</Button>
-          </div>
-        </div>
-        <TabBar active="Alerts" badge={unreadCount} />
-      </Screen>
+          <TabBar active="Alerts" badge={unreadCount} />
+        </Screen>
+      </div>
     );
   }
 
   return (
-    <Screen>
+    <div className="fw-shell-with-sidebar">
+      <SidebarNav active="Alerts" badge={unreadCount} />
+      <Screen wide>
       <div style={{ padding: '14px 16px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <div style={{ font: '800 20px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--navy-900)' }}>My alerts</div>
         <div style={{ display: 'flex', gap: 8, marginTop: 12, overflowX: 'auto' }}>
@@ -102,7 +108,8 @@ export default function AlertsPage() {
         </div>
       </div>
 
-      <div className="fw-scroll" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="fw-scroll" style={{ padding: '14px 16px' }}>
+        <div className="fw-grid-2">
         {filtered.map((a) => {
           const active = a.status === 'Active';
           const paused = a.status === 'Paused';
@@ -252,12 +259,14 @@ export default function AlertsPage() {
         })}
 
         {(tab === 'Paused' || tab === 'All') && filtered.some((a) => a.status === 'Paused') && (
-          <div style={{ display: 'flex', gap: 10, background: 'var(--blue-50)', border: '1px solid var(--blue-100)', borderRadius: 'var(--r-md)', padding: '12px 14px' }}>
+          <div className="fw-grid-span-all" style={{ display: 'flex', gap: 10, background: 'var(--blue-50)', border: '1px solid var(--blue-100)', borderRadius: 'var(--r-md)', padding: '12px 14px' }}>
             <span style={{ font: '400 12.5px/1.5 var(--font-sans)', color: 'var(--navy-800)' }}>Paused alerts keep their settings and history. Expired alerts are deleted after 90 days.</span>
           </div>
         )}
+        </div>
       </div>
       <TabBar active="Alerts" badge={unreadCount} />
-    </Screen>
+      </Screen>
+    </div>
   );
 }

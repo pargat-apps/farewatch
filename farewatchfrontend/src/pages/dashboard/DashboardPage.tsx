@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
+import { SidebarNav } from '../../components/SidebarNav';
 import { Button } from '../../components/ui/Button';
 import { BellIcon, TrendDownIcon, TargetIcon, WarningIcon } from '../../components/icons';
 import { currentUser } from '../../data/mock';
@@ -19,7 +20,9 @@ export default function DashboardPage() {
   const closeAlert = alerts.find((a) => a.status === 'Active' && a.target > 0);
 
   return (
-    <Screen>
+    <div className="fw-shell-with-sidebar">
+      <SidebarNav active="Search" badge={unreadCount} />
+      <Screen wide>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <img src={currentUser.avatar} alt={currentUser.name} style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} />
         <div style={{ flex: 1 }}>
@@ -40,23 +43,23 @@ export default function DashboardPage() {
       </div>
 
       <div className="fw-scroll" style={{ padding: '14px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+        <div className="fw-grid-4">
+          <div className="fw-hoverable" style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Active alerts</div>
             <div style={{ font: '800 22px/1 var(--font-sans)', color: 'var(--navy-900)', marginTop: 8 }}>{alerts.filter((a) => a.status === 'Active').length}</div>
           </div>
-          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+          <div className="fw-hoverable" style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Price drops</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 8 }}>
               <span style={{ font: '800 22px/1 var(--font-sans)', color: 'var(--navy-900)' }}>7</span>
               <span style={{ font: '700 11px/1 var(--font-sans)', color: 'var(--green-700)' }}>↓ this week</span>
             </div>
           </div>
-          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+          <div className="fw-hoverable" style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Potential savings</div>
             <div style={{ font: '800 22px/1 var(--font-sans)', color: 'var(--green-700)', marginTop: 8 }}>CA$520</div>
           </div>
-          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+          <div className="fw-hoverable" style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Routes tracked</div>
             <div style={{ font: '800 22px/1 var(--font-sans)', color: 'var(--navy-900)', marginTop: 8 }}>{alerts.length}</div>
           </div>
@@ -111,6 +114,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <TabBar active="Search" badge={unreadCount} />
-    </Screen>
+      </Screen>
+    </div>
   );
 }

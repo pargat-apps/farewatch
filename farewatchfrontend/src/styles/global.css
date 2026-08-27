@@ -110,6 +110,145 @@ img {
   }
 }
 
+/* ---------------------------------------------------------------------
+   Responsive breakpoints
+   390px  — design baseline (mobile, phone-frame look above 480px)
+   768px  — tablet: content widens, sheets become centered dialogs
+   1024px — desktop: sidebar nav replaces the bottom tab bar, screens
+            that opt in via .fw-screen--wide drop the phone frame
+   1280px — wide desktop: sidebar and content gain a little more room
+   ------------------------------------------------------------------- */
+
+/* Screens that opt into using real desktop width instead of staying a
+   480px phone frame. Default (no modifier) is used for forms, auth,
+   confirmations and errors, which read better as a centered card even
+   on a wide viewport. */
+@media (min-width: 768px) {
+  .fw-screen--wide {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fw-screen--wide {
+    max-width: none;
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+    min-height: 100vh;
+  }
+
+  .fw-shell-with-sidebar .fw-screen--wide {
+    min-height: 100vh;
+  }
+}
+
+@media (min-width: 1280px) {
+  .fw-screen--wide {
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+}
+
+/* Sidebar shell — wraps SidebarNav + a wide Screen for the five tab-root
+   pages (dashboard, alerts, saved, notifications, profile). Below 1024px
+   it collapses to just the screen; the bottom TabBar takes over nav. */
+.fw-shell-with-sidebar {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.fw-sidebar {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fw-shell-with-sidebar {
+    align-items: stretch;
+  }
+
+  .fw-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 248px;
+    flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid var(--border-default);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+/* The bottom tab bar is a mobile/tablet pattern; the sidebar replaces it
+   from 1024px up. */
+@media (min-width: 1024px) {
+  .fw-tabbar {
+    display: none;
+  }
+}
+
+/* Responsive card grids — mobile stays a single column (the flex-column
+   gap already used everywhere); these widen it at tablet/desktop without
+   any change to individual card markup. */
+.fw-grid-2,
+.fw-grid-3,
+.fw-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3, 12px);
+}
+
+/* Compact stat tiles (used for 4-up dashboard/summary stats) are already
+   2-up on a phone — only the jump to 4-up at desktop is new. */
+.fw-grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-2, 8px);
+}
+
+@media (min-width: 640px) {
+  .fw-grid-2,
+  .fw-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fw-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .fw-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.fw-grid-span-all {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .fw-screen-header {
+    padding: 14px 24px;
+  }
+}
+
+/* Cards get a gentle hover lift on pointer devices only, so touch
+   doesn't get a stuck hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .fw-hoverable {
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .fw-hoverable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
 .fw-card-stagger > * {
   animation: fwFadeUp 0.5s var(--ease-out) both;
 }
@@ -157,6 +296,28 @@ img {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+}
+
+/* At tablet width and up, a sheet sliding up from the edge of a 1400px
+   viewport reads as broken, not mobile-authentic. It becomes a centered
+   dialog instead — same component, no per-page changes needed. */
+@media (min-width: 768px) {
+  @keyframes fwDialogIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  .fw-sheet {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 480px;
+    border-radius: var(--r-xl);
+    max-height: 85vh;
+    animation: fwDialogIn 220ms var(--ease-out);
+  }
 }
 
 .fw-focusable:focus-visible {

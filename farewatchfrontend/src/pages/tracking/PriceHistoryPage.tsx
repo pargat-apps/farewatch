@@ -22,7 +22,7 @@ export default function PriceHistoryPage() {
   const path = series === 'Best price' ? BEST_PATH : DIRECT_PATH;
 
   return (
-    <Screen>
+    <Screen wide>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <BackButton onClick={() => navigate(-1)} />
         <div style={{ flex: 1 }}>
@@ -31,7 +31,8 @@ export default function PriceHistoryPage() {
         </div>
       </div>
 
-      <div className="fw-scroll" style={{ padding: 16 }}>
+      <div className="fw-scroll" style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ width: '100%', maxWidth: 760 }}>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           <div>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Best available today · Expedia</div>
@@ -113,7 +114,7 @@ export default function PriceHistoryPage() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+        <div className="fw-grid-4" style={{ marginTop: 12 }}>
           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-md)', padding: 12 }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>30-day low</div>
             <div style={{ font: '700 16px/1 var(--font-sans)', color: 'var(--green-700)', marginTop: 6 }}>CA$875</div>
@@ -139,6 +140,7 @@ export default function PriceHistoryPage() {
           </svg>
           <span style={{ font: '600 13px/1.3 var(--font-sans)', color: 'var(--green-700)' }}>↓ 16% since you started tracking</span>
         </div>
+      </div>
       </div>
       <TabBar active="Alerts" badge={unreadCount} />
     </Screen>

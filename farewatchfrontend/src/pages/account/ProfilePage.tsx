@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TabBar } from '../../components/TabBar';
+import { SidebarNav } from '../../components/SidebarNav';
 import { Button } from '../../components/ui/Button';
 import { ChevronRightIcon, LogoutIcon } from '../../components/icons';
 import { currentUser } from '../../data/mock';
@@ -11,7 +12,9 @@ export default function ProfilePage() {
   const { unreadCount, signOut } = useAppState();
 
   return (
-    <Screen>
+    <div className="fw-shell-with-sidebar">
+      <SidebarNav active="Profile" badge={unreadCount} />
+      <Screen wide>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 16px 20px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <div style={{ position: 'relative' }}>
           <img src={currentUser.avatar} alt={currentUser.name} style={{ width: 76, height: 76, borderRadius: '50%', objectFit: 'cover' }} />
@@ -27,6 +30,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="fw-scroll" style={{ padding: 16 }}>
+        <div style={{ maxWidth: 640, margin: '0 auto' }}>
         <div style={{ font: '600 11px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8 }}>Travel preferences</div>
         <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
           <Row label="Preferred currency" value={currentUser.currency} />
@@ -52,9 +56,11 @@ export default function ProfilePage() {
           <LogoutIcon size={15} color="var(--red-600)" />
           <span style={{ font: '600 14px/1 var(--font-sans)', color: 'var(--red-600)' }}>Sign out</span>
         </div>
+        </div>
       </div>
       <TabBar active="Profile" badge={unreadCount} />
-    </Screen>
+      </Screen>
+    </div>
   );
 }
 
