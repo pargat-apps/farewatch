@@ -1,0 +1,23 @@
+:root{
+/* Brand — deep navy primary */
+--navy-950:#071730;--navy-900:#0A2540;--navy-800:#0F3159;--navy-700:#164173;--navy-600:#1D538F;
+/* Action blue */
+--blue-700:#1450B4;--blue-600:#1B66D1;--blue-500:#2E7BE5;--blue-100:#DCEAFB;--blue-50:#EFF5FD;
+/* Aqua / teal accent (limited use) */
+--teal-600:#0C8F8A;--teal-500:#10A5A0;--teal-100:#D4F1EF;--teal-50:#EBF9F8;
+/* Green — price drops & savings */
+--green-700:#0E7A43;--green-600:#159452;--green-500:#1CAB61;--green-100:#D8F3E4;--green-50:#EDFAF3;
+/* Purple — user target prices */
+--purple-700:#5A3DB8;--purple-600:#6D4FC4;--purple-500:#8065D6;--purple-100:#E9E3F9;--purple-50:#F4F1FC;
+/* Semantic warn / error */
+--amber-600:#B45309;--amber-500:#D97706;--amber-100:#FCEED3;--amber-50:#FDF6E7;
+--red-600:#C22F3E;--red-500:#DC3D4D;--red-100:#FADDE0;--red-50:#FCEEEF;
+/* Neutrals — cool gray */
+--gray-900:#111827;--gray-800:#1F2937;--gray-700:#374151;--gray-600:#4B5563;--gray-500:#6B7280;--gray-400:#9CA3AF;--gray-300:#D1D5DB;--gray-200:#E5E7EB;--gray-100:#F3F4F6;--gray-50:#F9FAFB;--white:#FFFFFF;
+/* Semantic aliases */
+--brand:var(--navy-900);--action:var(--blue-600);--action-hover:var(--blue-700);--accent:var(--teal-500);
+--price-drop:var(--green-600);--price-rise:var(--red-500);--target:var(--purple-600);
+--text-heading:var(--navy-900);--text-body:var(--gray-700);--text-muted:var(--gray-500);--text-faint:var(--gray-400);--text-inverse:#FFFFFF;--text-link:var(--blue-600);
+--surface-page:var(--gray-50);--surface-card:#FFFFFF;--surface-sunken:var(--gray-100);--surface-brand:var(--navy-900);--surface-selected:var(--blue-50);
+--border-default:var(--gray-200);--border-strong:var(--gray-300);--border-selected:var(--blue-600);--focus-ring:rgba(46,123,229,.35);
+}
