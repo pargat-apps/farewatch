@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Design reference (not app source — a design-tool export with its own
+# bundled JS/CSS, kept locally as a build reference, never committed)
+/FareWatch mobile mockups/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

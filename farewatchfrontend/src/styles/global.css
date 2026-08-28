@@ -110,6 +110,202 @@ img {
   }
 }
 
+/* ---------------------------------------------------------------------
+   Responsive breakpoints
+   390px  — design baseline (mobile, phone-frame look above 480px)
+   768px  — tablet: content widens, sheets become centered dialogs
+   1024px — desktop: TopNav replaces the bottom tab bar; screens that
+            opt in via .fw-screen--wide drop the phone frame and render
+            their dedicated desktop layout (per FareWatch Desktop UI.dc.html)
+   1280px — wide desktop: a little more breathing room
+   ------------------------------------------------------------------- */
+
+/* Screens that opt into using real desktop width instead of staying a
+   480px phone frame. Default (no modifier) is used for forms, auth,
+   confirmations and errors, which read better as a centered card even
+   on a wide viewport. */
+@media (min-width: 768px) {
+  .fw-screen--wide {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fw-screen--wide {
+    max-width: none;
+    width: 100%;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+    min-height: 100vh;
+  }
+}
+
+/* The desktop content container: 1160px design width, centered, with
+   fluid gutters so it doesn't go edge-to-edge between 1024 and 1440,
+   or feel cramped above it. No padding below 1024 — this class gets used
+   around content shared with the mobile layout, which already has its
+   own padding from the mobile screen chrome; adding more here would
+   double up and crush the 390px view. */
+.fw-container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .fw-container {
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .fw-container {
+    padding: 0 48px;
+  }
+}
+
+/* Show one variant of a screen on mobile/tablet and a different one on
+   desktop. display:contents means the wrapper never participates in its
+   parent's layout — only its children do — so it's safe to use around
+   arbitrary markup (flex rows, grids, whatever the child needs). */
+.fw-mobile-only {
+  display: contents;
+}
+.fw-desktop-only {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fw-mobile-only {
+    display: none;
+  }
+  .fw-desktop-only {
+    display: contents;
+  }
+}
+
+/* The bottom tab bar is a mobile/tablet pattern; TopNav replaces it
+   from 1024px up. */
+@media (min-width: 1024px) {
+  .fw-tabbar {
+    display: none;
+  }
+}
+
+.fw-topnav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fw-topnav {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0 40px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-default);
+    flex-shrink: 0;
+    gap: 32px;
+  }
+
+  .fw-topnav--marketing {
+    height: 72px;
+  }
+
+  .fw-topnav-link {
+    font: 500 14px/1 var(--font-sans);
+    color: var(--text-body);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+  .fw-topnav-link[aria-current="page"] {
+    color: var(--navy-900);
+    font-weight: 600;
+    position: relative;
+  }
+  .fw-topnav-link[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -23px;
+    height: 2px;
+    background: var(--action);
+  }
+}
+
+/* Responsive card grids — mobile stays a single column (the flex-column
+   gap already used everywhere); these widen it at tablet/desktop without
+   any change to individual card markup. */
+.fw-grid-2,
+.fw-grid-3,
+.fw-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3, 12px);
+}
+
+/* Compact stat tiles (used for 4-up dashboard/summary stats) are already
+   2-up on a phone — only the jump to 4-up at desktop is new. */
+.fw-grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-2, 8px);
+}
+
+@media (min-width: 640px) {
+  .fw-grid-2,
+  .fw-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fw-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .fw-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.fw-grid-span-all {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .fw-screen-header {
+    padding: 14px 24px;
+  }
+}
+
+/* A flat mobile list becomes one bordered, shadowed card at desktop
+   (notifications, price-history change log). */
+@media (min-width: 1024px) {
+  .fw-list-card {
+    background: #fff;
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+  }
+}
+
+/* Cards get a gentle hover lift on pointer devices only, so touch
+   doesn't get a stuck hover state. */
+@media (hover: hover) and (pointer: fine) {
+  .fw-hoverable {
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .fw-hoverable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
 .fw-card-stagger > * {
   animation: fwFadeUp 0.5s var(--ease-out) both;
 }
@@ -157,6 +353,28 @@ img {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+}
+
+/* At tablet width and up, a sheet sliding up from the edge of a 1400px
+   viewport reads as broken, not mobile-authentic. It becomes a centered
+   dialog instead — same component, no per-page changes needed. */
+@media (min-width: 768px) {
+  @keyframes fwDialogIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  .fw-sheet {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 480px;
+    border-radius: var(--r-xl);
+    max-height: 85vh;
+    animation: fwDialogIn 220ms var(--ease-out);
+  }
 }
 
 .fw-focusable:focus-visible {

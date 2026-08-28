@@ -3,7 +3,7 @@ import { BellIcon, ProfileIcon, SearchIcon, TargetIcon, HeartIcon } from './icon
 
 export type TabName = 'Search' | 'Alerts' | 'Saved' | 'Notifications' | 'Profile';
 
-const TAB_ROUTES: Record<TabName, string> = {
+export const TAB_ROUTES: Record<TabName, string> = {
   Search: '/dashboard',
   Alerts: '/alerts',
   Saved: '/saved',
@@ -11,17 +11,17 @@ const TAB_ROUTES: Record<TabName, string> = {
   Profile: '/profile',
 };
 
-const TAB_ICONS: Record<TabName, (active: boolean) => React.ReactNode> = {
-  Search: (on) => <SearchIcon size={22} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
-  Alerts: (on) => <TargetIcon size={22} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
-  Saved: (on) => (
-    <HeartIcon size={22} color={on ? 'var(--action)' : 'var(--gray-500)'} style={on ? { fill: 'var(--action)' } : undefined} />
+export const TAB_ICONS: Record<TabName, (active: boolean, size?: number) => React.ReactNode> = {
+  Search: (on, size = 22) => <SearchIcon size={size} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
+  Alerts: (on, size = 22) => <TargetIcon size={size} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
+  Saved: (on, size = 22) => (
+    <HeartIcon size={size} color={on ? 'var(--action)' : 'var(--gray-500)'} style={on ? { fill: 'var(--action)' } : undefined} />
   ),
-  Notifications: (on) => <BellIcon size={22} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
-  Profile: (on) => <ProfileIcon size={22} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
+  Notifications: (on, size = 22) => <BellIcon size={size} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
+  Profile: (on, size = 22) => <ProfileIcon size={size} color={on ? 'var(--action)' : 'var(--gray-500)'} />,
 };
 
-const TABS: TabName[] = ['Search', 'Alerts', 'Saved', 'Notifications', 'Profile'];
+export const TABS: TabName[] = ['Search', 'Alerts', 'Saved', 'Notifications', 'Profile'];
 
 export interface TabBarProps {
   active: TabName;
@@ -32,6 +32,7 @@ export function TabBar({ active, badge = 0 }: TabBarProps) {
   const navigate = useNavigate();
   return (
     <nav
+      className="fw-tabbar"
       aria-label="Bottom navigation"
       style={{
         display: 'flex',

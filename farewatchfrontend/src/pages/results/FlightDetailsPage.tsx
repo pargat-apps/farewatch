@@ -16,7 +16,7 @@ export default function FlightDetailsPage() {
   const isAC42 = f.id === 'ac42';
 
   return (
-    <Screen>
+    <Screen wide>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#fff', borderBottom: '1px solid var(--border-default)', flexShrink: 0 }}>
         <BackButton onClick={() => navigate(-1)} />
         <div style={{ flex: 1 }}>
@@ -34,7 +34,8 @@ export default function FlightDetailsPage() {
         )}
       </div>
 
-      <div className="fw-scroll" style={{ padding: '14px 16px' }}>
+      <div className="fw-scroll" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ width: '100%', maxWidth: 760 }}>
         <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-lg)', padding: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <AirlineMark code={f.code} color={f.color} size={28} />
@@ -108,7 +109,7 @@ export default function FlightDetailsPage() {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+        <div className="fw-grid-4" style={{ marginTop: 12 }}>
           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 'var(--r-md)', padding: '10px 12px' }}>
             <div style={{ font: '600 10px/1 var(--font-sans)', letterSpacing: 'var(--track-wide)', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Cabin</div>
             <div style={{ font: '500 13px/1.3 var(--font-sans)', color: 'var(--navy-900)', marginTop: 5 }}>{searchForm.cabin}</div>
@@ -152,16 +153,19 @@ export default function FlightDetailsPage() {
           </div>
         </div>
       </div>
+      </div>
 
-      <div style={{ padding: '12px 16px 16px', borderTop: '1px solid var(--border-default)', background: '#fff', flexShrink: 0, boxShadow: '0 -4px 12px rgba(10,37,64,.04)' }}>
-        <Button size="lg" fullWidth onClick={() => navigate(`/flight/${f.id}/compare`)}>
-          Compare prices
-        </Button>
-        <div
-          onClick={() => navigate(`/track/${f.id}`)}
-          style={{ textAlign: 'center', font: '600 14px/1 var(--font-sans)', color: 'var(--action)', marginTop: 12, cursor: 'pointer' }}
-        >
-          Track price
+      <div style={{ padding: '12px 16px 16px', borderTop: '1px solid var(--border-default)', background: '#fff', flexShrink: 0, boxShadow: '0 -4px 12px rgba(10,37,64,.04)', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ width: '100%', maxWidth: 760 }}>
+          <Button size="lg" fullWidth onClick={() => navigate(`/flight/${f.id}/compare`)}>
+            Compare prices
+          </Button>
+          <div
+            onClick={() => navigate(`/track/${f.id}`)}
+            style={{ textAlign: 'center', font: '600 14px/1 var(--font-sans)', color: 'var(--action)', marginTop: 12, cursor: 'pointer' }}
+          >
+            Track price
+          </div>
         </div>
       </div>
     </Screen>
